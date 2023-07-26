@@ -135,7 +135,7 @@ subgraph_difference_plot = function(plexi.graph, node.importance,
 
   graph_to_plot = cbind(plexi.graph[,1:2],
                         W = as.numeric(plexi.graph[,3]) - as.numeric(plexi.graph[,4]))
-  G = plexi::as_igraph(graph_to_plot, diff.threshold)
+  G = PLEXI::as_igraph(graph_to_plot, diff.threshold)
 
   # hist(graph_to_plot$W)
   # hist(E(G)$weight)
