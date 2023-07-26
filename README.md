@@ -1,4 +1,4 @@
-# Multiplex Network Differential Analysis (MNDA) <img width="100" alt="image" src="https://github.com/behnam-yousefi/MNDA/blob/master/Figures/MNDA_logo.png?raw=true">
+# PLEX.I: A versatile tool to discover heterogeneity in multiplex networks
 
 Interactions between different biological elements are crucial for the function of biological systems and are usually represented as networks. The dysregulation of these networks can be associated with different clinical conditions such as diseases and response to treatments. In this work,  we propose an R package, called *multiplex network differential analysis* (MNDA) to quantify and test the variations in the local neighborhood of nodes between the two given conditions (e.g. case-control). We further show examples of finding important subnetworks in gene co-expression networks for response to treatment as well as an use case for individual specific networks (ISNs).
 
