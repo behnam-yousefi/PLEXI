@@ -1,7 +1,7 @@
 rm(list=ls())
 
-library(mnda)
-setwd("~/Desktop/R_Root/MNDA/usage_examples/")
+library(PLEXI)
+setwd("~/Desktop/R_Root/PLEXI/usage_examples/")
 
 ## Read graph data
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
@@ -18,11 +18,11 @@ diag(adjNonres) = 0
 
 ## Construct multiplex network
 adjList = list(adjRes, adjNonres)
-graphData = as_mnda_graph(adjList, outcome = c("res","non_res"))
+graphData = as_plexi_graph(adjList, outcome = c("res","non_res"))
 
 ## Run the algorithm
 ## 1. Embed nodes
-embeddingSpaceList = mnda_embedding_2layer(graphData, edge.threshold = .1,
+embeddingSpaceList = plexi_embedding_2layer(graphData, edge.threshold = .1,
                                            train.rep = 50, epochs = 25, batch.size = 10,
                                            random.walk = FALSE, null.perm = FALSE)
 
@@ -30,13 +30,13 @@ embeddingSpaceList = mnda_embedding_2layer(graphData, edge.threshold = .1,
 embeddingSpaceList = readRDS("Data/Embeddings/embeddingSpaceList_drug.rds")
 
 ## 2. Calculate distances and p.values
-mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)
+plexi_output = plexi_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)
 
-# Nodes = mnda_output$high_var_nodes
+# Nodes = plexi_output$high_var_nodes
 # write.table(Nodes, "Data/nodes_drug.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 ## Plot the difference sub-graph
-plt = subgraph_difference_plot(mnda.graph = graphData, node.importance = mnda_output$rank_sum_dist,
+plt = subgraph_difference_plot(plexi.graph = graphData, node.importance = plexi_output$rank_sum_dist,
                          n.var.nodes = 10, n.neigh = 10, diff.threshold = .2, edge.width = 3)
 plt
 
