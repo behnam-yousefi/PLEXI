@@ -35,14 +35,14 @@ var_nodes = myNet$var_nodes
 We then feed ```graph_data``` to the PLEXI pipeline specialized for a two-layer multiplex network (Scenario *"I"*), which is composed of two commands:
 `````{R}
 embeddingSpaceList = plexi_embedding_2layer(graph_data, train.rep = 50)
-mnda_output = plexi_node_detection_2layer(embeddingSpaceList)
-print(mnda_output$high_var_nodes_index)
+plexi_output = plexi_node_detection_2layer(embeddingSpaceList)
+print(plexi_output$high_var_nodes_index)
 `````
-the ```plexi_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/PLEXI).
+the ```plexi_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```plexi_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/PLEXI).
 
 ## 3. Usage Example 1: drug response  
 
-In this example, which is a showcase for condition *a*, we construct gene coexpression networks (GCNs) for drug responders and non-responders. To this end, we use the PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the *Tamoxifen* drug as ```y``` can be loaded accordingly:
+In this example, which is a showcase for Scenario I, we construct gene coexpression networks (GCNs) for drug responders and non-responders. To this end, we use the PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the *Tamoxifen* drug as ```y``` can be loaded accordingly:
 `````{R}
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
 X = data[[1]]
@@ -55,16 +55,16 @@ adj_nonres = abs(cor(X[y=="non_res",]))
 diag(adj_res) = 0
 diag(adj_nonres) = 0
 `````
-and convert them to the ```mnda``` multiplex network format.
+and convert them to the ```PLEXI``` multiplex network format.
 `````{R}
 adj_list = list(adj_res, adj_nonres)
-graph_data = as.mnda.graph(adj_list, outcome = c("res","non_res"))
+graph_data = as_plexi_graph(adj_list, outcome = c("res","non_res"))
 `````
-Now we can call the MNDA pipeline as in the previous example
+Now we can call the PLEXI pipeline as in the previous example
 `````{R}
-embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1, train.rep = 50, epochs = 20, batch.size = 10, random.walk = FALSE, null.perm = FALSE)
-mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni")
-Nodes = mnda_output$high_var_nodes
+embeddingSpaceList = plexi_embedding_2layer(graph_data, edge.threshold = .1, train.rep = 50, epochs = 20, batch.size = 10, random.walk = FALSE, null.perm = FALSE)
+plexi_output = plexi_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni")
+Nodes = plexi_output$high_var_nodes
 `````
 **hints for large networks:** 
 * the random walk algorithm can be disabled by ```random.walk = FALSE``` to decrease the running time;
@@ -73,7 +73,7 @@ Nodes = mnda_output$high_var_nodes
 
 ## 4. Usage Example 2: application on individual specific networks
 
-In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral- induced blood samples in an age- and sex- balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood significantly varies between the two conditions of stimulated and unstimulated. Following the MNDA pipeline, we first construct a set of paired ISNs for the two conditions, i.e. before and after stimulation, using the *lionessR* R package (Kuijjer et al., 2019 a; Kuijjer et al., 2019 b). In each network, nodes and edge weights represent genes and the correlation of their expressions, respectively. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data and create the node list.
+In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral- induced blood samples in an age- and sex- balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood significantly varies between the two conditions of stimulated and unstimulated. Following the PLEXI pipeline, we first construct a set of paired ISNs for the two conditions, i.e. before and after stimulation, using the *lionessR* R package (Kuijjer et al., 2019 a; Kuijjer et al., 2019 b). In each network, nodes and edge weights represent genes and the correlation of their expressions, respectively. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data and create the node list.
 `````{R}
 data = data.frame(readRDS("Data/ISN_BCG.rds"))
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
@@ -94,33 +94,33 @@ data_agg = cbind(apply(data[,y$Stim=="Null"], 1, mean),
 graph_data = cbind(nodeList, data_agg)
 colnames(graph_data) = c("V1", "V2", "Null", "Stim")
 `````
-and then perform the two-layer MNDA pipeline.
+and then perform the two-layer PLEXI pipeline.
 `````{R}
-embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1,
+embeddingSpaceList = plexi_embedding_2layer(graph_data, edge.threshold = .1,
                                            train.rep = 50, epochs = 25, batch.size = 10,
                                            random.walk = FALSE, null.perm = FALSE)
-mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)
+plexi_output = plexi_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)
 `````
 
 2- Project nodes of all the ISNs in the same embedding space and find significant genes in context *b* (see above).
 In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual} \times N_{gene}$.
 
-To implement this, we use ```mnda_embedding()``` and ```mnda_node_distance()``` commands, respectively.
+To implement this, we use ```plexi_embedding()``` and ```plexi_node_distance()``` commands, respectively.
 `````{R}
 graph_data = cbind(nodeList, data)
-embeddingSpaceList = mnda_embedding(graph_data, outcome = y$Stim, indv.index = y$ID,
+embeddingSpaceList = plexi_embedding(graph_data, outcome = y$Stim, indv.index = y$ID,
                                     train.rep=50, walk.rep=10, epochs=10, batch.size=50,
                                     random.walk=FALSE)
-Dist = mnda_node_distance(embeddingSpaceList)
+Dist = plexi_node_distance(embeddingSpaceList)
 `````
 Having the distance matrix, one can find extreme distances, i.e. highly variable/constant gene neighbourhoods, or find association of any variable with them, i.e. genes whose neighbourhoods are significantly associated with a variable such as sex:
 `````{R}
 sex = y[duplicated(y$ID), "Sex"]
-Pval = mnda_distance_test_isn(Dist, p.adjust.method = "bonferroni")
+Pval = plexi_distance_test_isn(Dist, p.adjust.method = "bonferroni")
 `````
 
 
-The source code is available at "[usage_examples/](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/)"
+The source code is available at "[usage_examples/](https://github.com/behnam-yousefi/plexi/blob/master/usage_examples/)"
 
 ## References
 Corsello,S.M. et al. (2020) Discovering the anticancer potential of non-oncology drugs by systematic viability profiling. Nature Cancer, 1, 235–248.\
