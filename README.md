@@ -1,13 +1,9 @@
-# PLEX.I: A versatile tool to discover heterogeneity in multiplex networks
+# PLEX.I: A tool to discover features in multiplex networks that reflect clinical variation
 
 ## Installation
-Install from CRAN
-`````{R}
-install.packages("mnda")
-`````
 Install the latest version from GitHub
 `````{R}
-devtools::install_github("behnam-yousefi/MNDA/package/mnda")
+devtools::install_github("behnam-yousefi/PLEXI/package/")
 `````
 MNDA will also install TensorFlow and Keras for R, which need to be activated by installation of Miniconda. For this, according to the installation guidline of Keras ([here](https://cran.r-project.org/web/packages/keras/vignettes/index.html)):
 `````{R}
