@@ -3,13 +3,13 @@
 ## 1. Installation
 Install from CRAN
 `````{R}
-install.packages("mnda")
+install.packages("PLEXI")
 `````
 Install the latest version from GitHub
 `````{R}
-devtools::install_github("behnam-yousefi/MNDA/package/mnda")
+devtools::install_github("behnam-yousefi/PLEXI/PLEXI")
 `````
-MNDA will also install TensorFlow and Keras for R, which need to be activated by installation of Miniconda. For this, according to the installation guidline of Keras ([here](https://cran.r-project.org/web/packages/keras/vignettes/index.html)):
+PLEXI will also install Keras for R, which need to be activated by installation of Miniconda. For this, according to the installation guidline of Keras ([here](https://cran.r-project.org/web/packages/keras/vignettes/index.html)):
 `````{R}
 library(keras)
 install_keras()
@@ -18,27 +18,27 @@ This is required only once for the installation.
 
 ## 2. Apply on simulated networks
 
-To test the ```mnda``` package, a toy example multilayer network can be generated using the ```network_gen()``` function:
+To test the ```PLEXI``` package, a toy example multilayer network can be generated using the ```network_gen()``` function:
 `````{R}
-myNet = network_gen(N_nodes = 100, N_var_nodes = 5, N_var_nei = 90, noise_sd = .01)
+myNet = network_gen(n.nodes = 100, n.var.nodes = 5, n.var.nei = 90, noise.sd = .01)
 `````
 The process is described as the following:
-1. two fully connected networks with ```N_nodes``` number of matching nodes and uniform random edge weights is generated.
-2. a number of ```N_var_nodes``` nodes are randomly selected to have different edge weights with ```N_var_nei``` number of nodes (```N_var_nei``` $<$ ```N_nodes``` $- 1$) between the two networks.
-3. a set of random *Gaussian* noise with zero mean and sd = ```noise_sd``` is generated and added to all of the edge weights.
+1. two fully connected networks with ```n.nodes``` number of matching nodes and uniform random edge weights is generated.
+2. a number of ```n.var.nodes``` nodes are randomly selected to have different edge weights with ```n.var.nei``` number of nodes (```n.var.nei``` $<$ ```n.nodes``` $- 1$) between the two networks.
+3. a set of random *Gaussian* noise with zero mean and sd = ```noise.sd``` is generated and added to all of the edge weights.
 
 The generated multiplex network and the set of the randomly selected nodes are accessible by the following lines, respectively.
 `````{R}
 graph_data = myNet$data_graph
 var_nodes = myNet$var_nodes
 `````
-We then feed ```graph_data``` to the MNDA pipeline specialized for a two-layer multiplex network (condition *"a"*), which is composed of two commands:
+We then feed ```graph_data``` to the PLEXI pipeline specialized for a two-layer multiplex network (Scenario *"I"*), which is composed of two commands:
 `````{R}
-embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50)
-mnda_output = mnda_node_detection_2layer(embeddingSpaceList)
+embeddingSpaceList = plexi_embedding_2layer(graph_data, train.rep = 50)
+mnda_output = plexi_node_detection_2layer(embeddingSpaceList)
 print(mnda_output$high_var_nodes_index)
 `````
-the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` function calculates the node-pair distances and asignes a P-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/network_generation_ex.R).
+the ```plexi_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/PLEXI).
 
 ## 3. Usage Example 1: drug response  
 
