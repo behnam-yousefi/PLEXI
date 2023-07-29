@@ -36,7 +36,7 @@ embeddingSpaceList = plexi_embedding_2layer(graph_data, train.rep = 50)
 plexi_output = plexi_node_detection_2layer(embeddingSpaceList)
 print(plexi_output$high_var_nodes_index)
 `````
-the ```plexi_embedding_2layer()``` function represents all the nodes in a common embedding space (Section 2.1); and the ```plexi_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (Section 2.2). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/PLEXI).
+the ```plexi_embedding_2layer()``` function represents all the nodes in a common embedding space (Section 2.1); and the ```plexi_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (Section 2.2). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [Usage_Examples/network_generation_ex.R](Usage_Examples/network_generation_ex.R).
 
 ## 3. Usage Example 1: drug response  
 
