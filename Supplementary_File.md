@@ -85,7 +85,7 @@ colnames(y) = c("ID", "Stim", "Sex")
 Now that we have all the ISNs with their phenotypes, we can perform two types of analysis on the population level:
 
 1- Aggregate ISNs (by averaging) into two groups (i.e. pre/post stimulation) and find genes with significant neighbourhood variation.
-This will be similar to *Usage Example 1* in context *a* (see above). We first obtain the two aggregated networks of pre- and post- stimulation;
+This will be similar to *Usage Example 1* in the context of Scenario *I* (see above). We first obtain the two aggregated networks of pre- and post- stimulation;
 `````{R}
 data_agg = cbind(apply(data[,y$Stim=="Null"], 1, mean),
                  apply(data[,y$Stim=="BCG"], 1, mean))
@@ -100,8 +100,7 @@ embeddingSpaceList = plexi_embedding_2layer(graph_data, edge.threshold = .1,
 plexi_output = plexi_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)
 `````
 
-2- Project nodes of all the ISNs in the same embedding space and find significant genes in context *b* (see above).
-In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual} \times N_{gene}$.
+2- Project nodes of all the ISNs in the same embedding space and find significant genes, whose neighbourhood variants is associated with sex, in the context of Scenairio *II* (see above). In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual} \times N_{gene}$.
 
 To implement this, we use ```plexi_embedding()``` and ```plexi_node_distance()``` commands, respectively.
 `````{R}
@@ -111,13 +110,11 @@ embeddingSpaceList = plexi_embedding(graph_data, outcome = y$Stim, indv.index = 
                                     random.walk=FALSE)
 Dist = plexi_node_distance(embeddingSpaceList)
 `````
-Having the distance matrix, one can find extreme distances, i.e. highly variable/constant gene neighbourhoods, or find association of any variable with them, i.e. genes whose neighbourhoods are significantly associated with a variable such as sex:
+Having the distance matrix, one can find association of any variable with them, for instance, here, we consider sex:
 `````{R}
 sex = y[duplicated(y$ID), "Sex"]
-Pval = plexi_distance_test_isn(Dist, p.adjust.method = "bonferroni")
+Pval = plexi_distance_test_isn(Dist, sex, p.adjust.method = "bonferroni")
 `````
-
-
 The source code is available at "[usage_examples/](https://github.com/behnam-yousefi/plexi/blob/master/usage_examples/)"
 
 ## References
