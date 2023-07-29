@@ -30,7 +30,7 @@ The generated multiplex network and the set of the randomly selected nodes are a
 graph_data = myNet$data_graph
 var_nodes = myNet$var_nodes
 `````
-We then feed ```graph_data``` to the PLEXI pipeline specialized for a two-layer multiplex network (Scenario *"I"*), which is composed of two commands:
+We then feed ```graph_data``` to the PLEXI pipeline specialized for a two-layer multiplex network (Scenario *I*), which is composed of two commands:
 `````{R}
 embeddingSpaceList = plexi_embedding_2layer(graph_data, train.rep = 50)
 plexi_output = plexi_node_detection_2layer(embeddingSpaceList)
@@ -40,7 +40,7 @@ the ```plexi_embedding_2layer()``` function represents all the nodes in a common
 
 ## 3. Usage Example 1: drug response  
 
-In this example, which is a showcase for Scenario I, we construct gene coexpression networks (GCNs) for drug responders and non-responders. To this end, we use the PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the *Tamoxifen* drug as ```y``` can be loaded accordingly:
+In this example, which is a showcase for Scenario *I*, we construct gene coexpression networks (GCNs) for drug responders and non-responders. To this end, we use the PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the *Tamoxifen* drug as ```y``` can be loaded accordingly:
 `````{R}
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
 X = data[[1]]
@@ -53,7 +53,7 @@ adj_nonres = abs(cor(X[y=="non_res",]))
 diag(adj_res) = 0
 diag(adj_nonres) = 0
 `````
-and convert them to the ```PLEXI``` multiplex network format.
+and convert them into the ```PLEXI``` multiplex network format.
 `````{R}
 adj_list = list(adj_res, adj_nonres)
 graph_data = as_plexi_graph(adj_list, outcome = c("res","non_res"))
