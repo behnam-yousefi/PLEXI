@@ -1,13 +1,11 @@
 # Supplementary File
 
 ## 1. Installation
-Install from CRAN
-`````{R}
-install.packages("PLEXI")
-`````
+
 Install the latest version from GitHub
 `````{R}
 devtools::install_github("behnam-yousefi/PLEXI/PLEXI")
+library(PLEXI)
 `````
 PLEXI will also install Keras for R, which need to be activated by installation of Miniconda. For this, according to the installation guidline of Keras ([here](https://cran.r-project.org/web/packages/keras/vignettes/index.html)):
 `````{R}
@@ -18,7 +16,7 @@ This is required only once for the installation.
 
 ## 2. Apply on simulated networks
 
-To test the ```PLEXI``` package, a toy example multilayer network can be generated using the ```network_gen()``` function:
+To test the ```PLEXI``` package, a toy example of multilayer network can be generated using the ```network_gen()``` function:
 `````{R}
 myNet = network_gen(n.nodes = 100, n.var.nodes = 5, n.var.nei = 90, noise.sd = .01)
 `````
@@ -38,7 +36,7 @@ embeddingSpaceList = plexi_embedding_2layer(graph_data, train.rep = 50)
 plexi_output = plexi_node_detection_2layer(embeddingSpaceList)
 print(plexi_output$high_var_nodes_index)
 `````
-the ```plexi_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```plexi_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/PLEXI).
+the ```plexi_embedding_2layer()``` function represents all the nodes in a common embedding space (Section 2.1); and the ```plexi_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (Section 2.2). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/PLEXI).
 
 ## 3. Usage Example 1: drug response  
 
