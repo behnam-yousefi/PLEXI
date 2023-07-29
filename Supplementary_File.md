@@ -64,6 +64,8 @@ embeddingSpaceList = plexi_embedding_2layer(graph_data, edge.threshold = .1, tra
 plexi_output = plexi_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni")
 Nodes = plexi_output$high_var_nodes
 `````
+The source code available at [Usage_Examples/drug_response_ex.R](Usage_Examples/drug_response_ex.R).
+
 **hints for large networks:** 
 * the random walk algorithm can be disabled by ```random.walk = FALSE``` to decrease the running time;
 * the network permutation and representation can be disabled by ```null.perm = FALSE``` to decrease the running time;
@@ -115,7 +117,7 @@ Having the distance matrix, one can find association of any variable with them, 
 sex = y[duplicated(y$ID), "Sex"]
 Pval = plexi_distance_test_isn(Dist, sex, p.adjust.method = "bonferroni")
 `````
-The source code is available at "[usage_examples/](https://github.com/behnam-yousefi/plexi/blob/master/usage_examples/)"
+The source code available at [Usage_Examples/milieu_interior_ISN_sex_ex.R](Usage_Examples/milieu_interior_ISN_sex_ex.R).
 
 ## References
 Corsello,S.M. et al. (2020) Discovering the anticancer potential of non-oncology drugs by systematic viability profiling. Nature Cancer, 1, 235–248.\
