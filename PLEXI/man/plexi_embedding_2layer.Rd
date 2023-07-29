@@ -15,7 +15,7 @@ plexi_embedding_2layer(
   walk.rep = 100,
   n.steps = 5,
   random.walk = TRUE,
-  null.perm = TRUE,
+  null.perm = FALSE,
   demo = FALSE,
   verbose = TRUE
 )
