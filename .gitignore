@@ -1,6 +1,8 @@
 .DS_Store
 .Rhistory
 .Rproj.user
+My_model_temp/
+
 
 *.tar.gz
 *.tgz
