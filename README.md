@@ -1,4 +1,4 @@
-# Supplementary File
+# PLEX.I: A tool to discover features in multiplex networks that reflect clinical variation
 
 ## 1. Installation
 
