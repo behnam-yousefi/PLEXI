@@ -36,7 +36,7 @@ embeddingSpaceList = plexi_embedding_2layer(graph_data, train.rep = 50)
 plexi_output = plexi_node_detection_2layer(embeddingSpaceList)
 print(plexi_output$high_var_nodes_index)
 `````
-the ```plexi_embedding_2layer()``` function represents all the nodes in a common embedding space (Section 2.1); and the ```plexi_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (Section 2.2). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [Usage_Examples/network_generation_ex.R](Usage_Examples/network_generation_ex.R).
+the ```plexi_embedding_2layer()``` function represents all the nodes in a common embedding space (Section 2.1); and the ```plexi_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (Section 2.2). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [Usage_Examples/network_generation_ex.R](https://github.com/behnam-yousefi/PLEXI/blob/master/Usage_Examples/network_generation_ex.R).
 
 ## 3. Usage Example 1: drug response  
 
@@ -64,7 +64,7 @@ embeddingSpaceList = plexi_embedding_2layer(graph_data, edge.threshold = .1, tra
 plexi_output = plexi_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni")
 Nodes = plexi_output$high_var_nodes
 `````
-The source code available at [Usage_Examples/drug_response_ex.R](Usage_Examples/drug_response_ex.R).
+The source code available at [Usage_Examples/drug_response_ex.R](https://github.com/behnam-yousefi/PLEXI/blob/master/Usage_Examples/drug_response_ex.R).
 
 **hints for large networks:** 
 * the random walk algorithm can be disabled by ```random.walk = FALSE``` to decrease the running time;
@@ -117,7 +117,7 @@ Having the distance matrix, one can find association of any variable with them, 
 sex = y[duplicated(y$ID), "Sex"]
 Pval = plexi_distance_test_isn(Dist, sex, p.adjust.method = "bonferroni")
 `````
-The source code available at [Usage_Examples/milieu_interior_ISN_sex_ex.R](Usage_Examples/milieu_interior_ISN_sex_ex.R).
+The source code available at [Usage_Examples/milieu_interior_ISN_sex_ex.R](https://github.com/behnam-yousefi/PLEXI/blob/master/Usage_Examples/milieu_interior_ISN_sex_ex.R).
 
 ## References
 Corsello,S.M. et al. (2020) Discovering the anticancer potential of non-oncology drugs by systematic viability profiling. Nature Cancer, 1, 235–248.\
