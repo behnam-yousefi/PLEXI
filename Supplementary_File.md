@@ -60,7 +60,9 @@ graph_data = as_plexi_graph(adj_list, outcome = c("res","non_res"))
 `````
 Now we can call the PLEXI pipeline as in the previous example
 `````{R}
-embeddingSpaceList = plexi_embedding_2layer(graph_data, edge.threshold = .1, train.rep = 50, epochs = 20, batch.size = 10, random.walk = FALSE, null.perm = FALSE)
+embeddingSpaceList = plexi_embedding_2layer(graph_data, edge.threshold = .1,
+  train.rep = 50,epochs = 20, batch.size = 10,
+  random.walk = FALSE, null.perm = FALSE)
 plexi_output = plexi_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni")
 Nodes = plexi_output$high_var_nodes
 `````
@@ -73,7 +75,7 @@ The source code available at [Usage_Examples/drug_response_ex.R](https://github.
 
 ## 4. Usage Example 2: application on individual specific networks
 
-In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral- induced blood samples in an age- and sex- balanced cohort of 1,000 healthy individuals are generated. Here, the aim is to find genes whose neighborhood varition (from unstimulated to stimulated) is associated with sex. Following the PLEXI pipeline, we first construct a set of paired ISNs for the two conditions, i.e. before and after stimulation, using the *lionessR* R package (Kuijjer et al., 2019 a; Kuijjer et al., 2019 b). In each network, nodes and edge weights represent genes and the correlation of their expressions, respectively. The imputed ISNs are reposited in ```"Usage_examples/Data/ISN_net.rds"```. We first read the ISN data and create the node list.
+In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral- induced blood samples in an age- and sex-balanced cohort of 1,000 healthy individuals are generated. Here, the aim is to find genes whose neighborhood varition (from unstimulated to stimulated) is associated with sex. Following the PLEXI pipeline, we first construct a set of paired ISNs for the two conditions, i.e. before and after stimulation, using the *lionessR* R package (Kuijjer et al., 2019 a; Kuijjer et al., 2019 b). In each network, nodes and edge weights represent genes and the correlation of their expressions, respectively. The imputed ISNs are reposited in ```"Usage_examples/Data/ISN_net.rds"```. We first read the ISN data and create the node list.
 `````{R}
 data = data.frame(readRDS("Data/ISN_BCG.rds"))
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
@@ -90,16 +92,17 @@ Now that we have all the ISNs with their phenotypes, we can perform two types of
 This will be similar to *Usage Example 1* in the context of Scenario *I* (see above). We first obtain the two aggregated networks of pre- and post- stimulation;
 `````{R}
 data_agg = cbind(apply(data[,y$Stim=="Null"], 1, mean),
-                 apply(data[,y$Stim=="BCG"], 1, mean))
+  apply(data[,y$Stim=="BCG"], 1, mean))
 graph_data = cbind(nodeList, data_agg)
 colnames(graph_data) = c("V1", "V2", "Null", "Stim")
 `````
 and then perform the two-layer PLEXI pipeline.
 `````{R}
 embeddingSpaceList = plexi_embedding_2layer(graph_data, edge.threshold = .1,
-                                           train.rep = 50, epochs = 25, batch.size = 10,
-                                           random.walk = FALSE, null.perm = FALSE)
-plexi_output = plexi_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)
+  train.rep = 50, epochs = 25, batch.size = 10,
+  random.walk = FALSE, null.perm = FALSE)
+plexi_output = plexi_node_detection_2layer(embeddingSpaceList,
+  p.adjust.method = "bonferroni", alpha = .01)
 `````
 
 2- Project nodes of all the ISNs in the same embedding space and find significant genes, whose neighbourhood variants is associated with sex, in the context of Scenairio *II* (see above). In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual} \times N_{gene}$.
@@ -108,8 +111,8 @@ To implement this, we use ```plexi_embedding()``` and ```plexi_node_distance()``
 `````{R}
 graph_data = cbind(nodeList, data)
 embeddingSpaceList = plexi_embedding(graph_data, outcome = y$Stim, indv.index = y$ID,
-                                    train.rep=50, walk.rep=10, epochs=10, batch.size=50,
-                                    random.walk=FALSE)
+  train.rep=50, walk.rep=10, epochs=10, batch.size=50,
+  random.walk=FALSE)
 Dist = plexi_node_distance(embeddingSpaceList)
 `````
 Having the distance matrix, one can find association of any variable with them, for instance, here, we consider sex:
